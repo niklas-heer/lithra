@@ -9,6 +9,11 @@ repository = "https://github.com/niklas-heer/lithra"
 publish = false
 
 [dependencies]
+clap = { version = "4.6.7", features = ["derive"] }
+
+[[bench]]
+name = "startup"
+harness = false
 
 [profile.release]
 overflow-checks = true
@@ -23,7 +28,16 @@ nursery = { level = "deny", priority = -1 }
 unwrap_used = "deny"
 expect_used = "deny"
 indexing_slicing = "deny"
-panic = "deny"
-todo = "deny"
+arithmetic_side_effects = "deny"
+unreachable = "deny"
 unimplemented = "deny"
+unchecked_time_subtraction = "deny"
+todo = "deny"
+string_slice = "deny"
+panic_in_result_fn = "deny"
+panic = "deny"
+exit = "deny"
 as_conversions = "deny"
+
+[dev-dependencies]
+criterion = "0.8.2"

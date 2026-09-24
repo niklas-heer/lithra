@@ -14,15 +14,20 @@ Nothing works yet. The first milestone is evaluating a Starlark package definiti
 
 ## Development
 
-Install [mise](https://mise.jdx.dev/), then run `mise install` in the checkout. It installs the pinned Rust toolchain and Dagger.
+Install [mise](https://mise.jdx.dev/), then run `mise install` in the checkout. It installs the pinned Rust toolchain, Dagger, cargo-nextest, and the local helpers: Bacon, watchexec, cargo-generate, cargo-seek, and git-cliff.
 
 ```sh
-mise run check   # formatting, compilation, Clippy, tests
-mise run build   # release binary at target/release/lithra
-mise run ci      # the Linux CI pipeline in Dagger (needs a running container engine such as Colima)
+mise run check      # formatting, compilation, Clippy, nextest, doc tests
+mise run test       # tests only
+mise run build      # release binary at target/release/lithra
+mise run dev        # continuous compiler and Clippy feedback with Bacon
+mise run watch      # rerun all checks on every change with watchexec
+mise run bench      # Criterion benchmark of CLI startup
+mise run changelog  # regenerate CHANGELOG.md with git-cliff
+mise run ci         # the Linux CI pipeline in Dagger (needs a running container engine such as Colima)
 ```
 
-GitHub Actions runs the Dagger pipeline on Linux and the same mise tasks natively on macOS.
+GitHub Actions runs the Dagger pipeline on Linux and the same mise tasks natively on Apple Silicon and Intel macOS.
 
 ## License
 

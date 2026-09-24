@@ -1,7 +1,14 @@
 [tools]
 dagger = "0.21.9"
+git-cliff = "2.14.2"
 # Keep aligned with rust-toolchain.toml and Cargo.toml.
 rust = { version = "1.97.1", profile = "minimal", components = ["clippy", "rustfmt", "rust-analyzer", "rust-src"] }
+"aqua:nextest-rs/nextest/cargo-nextest" = "0.9.146"
+# Local development helpers. CI skips them through MISE_DISABLE_TOOLS.
+"cargo:bacon" = "3.25.0"
+watchexec = "2.7.3"
+"github:cargo-generate/cargo-generate" = "0.25.0"
+"github:tareqimbasher/cargo-seek" = "0.2.0"
 
 [tasks.fmt]
 description = "Format Rust source"
@@ -13,17 +20,37 @@ run = [
   "cargo fmt --all -- --check",
   "cargo check --locked --all-targets --all-features",
   "cargo clippy --locked --all-targets --all-features -- -D warnings",
-  "cargo test --locked --all-features",
+  "cargo nextest run --locked --all-features",
+  "cargo test --locked --all-features --doc",
 ]
 
 [tasks.test]
-description = "Run Rust tests"
-run = "cargo test --locked --all-features"
+description = "Run unit, integration, and documentation tests"
+run = [
+  "cargo nextest run --locked --all-features",
+  "cargo test --locked --all-features --doc",
+]
 
 [tasks.build]
 description = "Build the release binary"
 run = "cargo build --locked --release"
 
+[tasks.dev]
+description = "Show continuous compiler and Clippy feedback"
+run = "bacon clippy-all"
+
+[tasks.watch]
+description = "Rerun all checks whenever source files change"
+run = "watchexec --exts rs,toml --restart -- mise run check"
+
+[tasks.bench]
+description = "Measure CLI startup time"
+run = "cargo bench --locked --bench startup"
+
 [tasks.ci]
 description = "Run Linux checks in Dagger (requires a running container engine)"
 run = "dagger call ci"
+
+[tasks.changelog]
+description = "Generate CHANGELOG.md from Conventional Commits (pass --tag vX.Y.Z before tagging)"
+run = "git-cliff --config cliff.toml --output CHANGELOG.md"

@@ -22,8 +22,17 @@ jobs:
           call: ci
 
   macos:
-    runs-on: macos-latest
+    name: macos (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-latest, macos-15-intel]
     timeout-minutes: 20
+    env:
+      # Local development helpers are not needed for checks.
+      MISE_DISABLE_TOOLS: cargo:bacon,watchexec,github:cargo-generate/cargo-generate,github:tareqimbasher/cargo-seek,git-cliff
+      NEXTEST_PROFILE: ci
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

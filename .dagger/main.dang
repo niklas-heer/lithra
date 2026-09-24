@@ -8,9 +8,11 @@ type LithraCi {
     "!Cargo.lock",
     "!rust-toolchain.toml",
     "!clippy.toml",
+    "!.config",
     "!mise.toml",
     "!src",
     "!tests",
+    "!benches",
   ])
 
   """
@@ -22,6 +24,9 @@ type LithraCi {
       .withoutFile("/mise/config.toml")
       .withWorkdir("/src")
       .withEnvVariable("MISE_TRUSTED_CONFIG_PATHS", "/src")
+      # Local development helpers are not needed for checks.
+      .withEnvVariable("MISE_DISABLE_TOOLS", "cargo:bacon,watchexec,github:cargo-generate/cargo-generate,github:tareqimbasher/cargo-seek,git-cliff")
+      .withEnvVariable("NEXTEST_PROFILE", "ci")
       .withFile("mise.toml", source.file("mise.toml"))
       .withFile("rust-toolchain.toml", source.file("rust-toolchain.toml"))
       .withExec(["mise", "install"])
