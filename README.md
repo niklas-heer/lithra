@@ -12,6 +12,18 @@ Lithra is an early experiment in keeping what makes Nix great, and fixing what m
 
 Nothing works yet. The first milestone is evaluating a Starlark package definition into a build plan and benchmarking it against `nix eval`.
 
+## Development
+
+Install [mise](https://mise.jdx.dev/), then run `mise install` in the checkout. It installs the pinned Rust toolchain and Dagger.
+
+```sh
+mise run check   # formatting, compilation, Clippy, tests
+mise run build   # release binary at target/release/lithra
+mise run ci      # the Linux CI pipeline in Dagger (needs a running container engine such as Colima)
+```
+
+GitHub Actions runs the Dagger pipeline on Linux and the same mise tasks natively on macOS.
+
 ## License
 
 [MIT](LICENSE)
